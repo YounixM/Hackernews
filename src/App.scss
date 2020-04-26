@@ -1,0 +1,14 @@
+.App {
+    height: 100%;
+    margin: 0 15px;
+}
+
+.text-secondary {
+    color: #999;
+}
+
+.ellipsis {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
