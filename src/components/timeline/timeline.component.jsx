@@ -1,5 +1,5 @@
 import React from 'react';
-import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Legend, Line, ResponsiveContainer, Label } from "recharts";
+import { LineChart, CartesianGrid, XAxis, YAxis, Tooltip, Line, ResponsiveContainer, Label } from "recharts";
 
 import '../../assets/styles/timeline.scss';
 

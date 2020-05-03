@@ -105,7 +105,7 @@ export default class Stories extends Component {
 
   fetchStories() {
     let url =
-      "http://hn.algolia.com/api/v1/search?tags=front_page&page=" +
+      "https://hn.algolia.com/api/v1/search?tags=front_page&page=" +
       this.state.pageNo;
 
     fetch(url)

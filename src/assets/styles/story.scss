@@ -12,12 +12,7 @@
         }
     }
 
-    .comments,
-    .points,
-    .posted_at,
-    .votes,
-    .upvote,
-    .hide {
+    .comments, .points, .posted_at, .votes, .upvote, .hide {
         flex: 1;
         margin: 0 4px;
     }
@@ -36,6 +31,18 @@
 
     .upvote {
         font-weight: bolder;
+
+        .vote-text {
+            display: none;
+
+            -webkit-user-select: none; /* Safari */
+            -ms-user-select: none; /* IE 10+ and Edge */
+            user-select: none; /* Standard syntax */
+
+            @media screen and (max-width: 768px) {
+                display: inline-block;
+            }
+        }
 
         &:hover {
             cursor: pointer;
@@ -60,7 +67,7 @@
         flex-direction: column;
         align-items: flex-start;
 
-        .title, .comments, .points,
+        .title, .comments, .points, .votes,
         .posted_at, .upvote, .hide, .domain, .author {
             margin: 8px 0;
         }
@@ -68,14 +75,33 @@
         .title {
             order: 1;
             width: 100%;
+
+            ::before {
+                content: 'Title: ';
+                font-weight: bolder;
+            }
         }
 
         .domain {
             order: 2;
+
+            ::before {
+                content: 'Domain: ';
+                font-weight: bolder;
+            }
         }
 
         .author {
             order: 3;
+
+            .text-secondary {
+                display: none;
+            }
+
+            ::before {
+                content: 'Author: ';
+                font-weight: bolder;
+            }
         }
 
         .posted_at {
@@ -86,12 +112,18 @@
             order: 5;
         }
 
-        .upvote {
+        .votes {
             order: 6;
+            clear: both;
         }
 
-        .hide {
+        .upvote {
             order: 7;
+        }
+
+
+        .hide {
+            order: 8;
         }
 
 
