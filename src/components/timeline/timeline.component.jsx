@@ -15,9 +15,9 @@ export default function Timeline (props) {
                 <XAxis dataKey="objectID" orientation='bottom' angle={-90} textAnchor="end" interval={0}>
                     <Label value="ID" offset={-80} position="insideBottom" />
                 </XAxis>
-                <YAxis label={{ value: 'Comments', angle: -90, position: 'insideLeft' }}/>
+                <YAxis label={{ value: 'Votes', angle: -90, position: 'insideLeft' }}/>
                 <Tooltip />
-                <Line type="monotone" dataKey="num_comments" stroke="#8884d8" />
+                <Line type="monotone" dataKey="points" stroke="#8884d8" />
             </LineChart>
         </ResponsiveContainer>
     )
