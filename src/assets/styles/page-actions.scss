@@ -1,0 +1,37 @@
+.page-actions {
+    display: flex;
+    align-items: center;
+    color: #ff6600;
+    margin: 10px 0;
+    height: 60px;
+    padding: 0 15px;
+    justify-content: flex-end;
+    box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
+    
+    .fetchPrevBtn ,
+    .fetchNextBtn {
+        color: #ff6600;
+        background: transparent;
+        font-size: 16px;
+        font-weight: 600;
+        border: none;
+        outline: none;
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        &:focus {
+            outline: none;
+        }
+
+        &.disabled {
+            color: #333333;
+            pointer-events: none;
+        }
+    }
+
+    .fetchPrevBtn {
+        border-right: 2px solid #ff6600;
+    }
+}

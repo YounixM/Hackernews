@@ -1,9 +1,34 @@
+@import url('https://fonts.googleapis.com/css?family=Fira+Mono:400');
+
 .stories-container {
-    height: calc(100% - 100px);
+    height: calc(100% - 200px);
+
+    .storiesHeader {
+        padding: 10px 8px;
+        border-radius: 3px;
+        margin-bottom: 4px;
+        display: flex;
+        font-weight: 700;
+        background: #ff6600;
+        color: white;
+
+        .comments,
+        .votes,
+        .upvote {
+            flex: 1;   
+        }
+
+        .storyDetails {
+            flex: 8;
+        }
+    }
 
     .stories {
-        height: calc(100% - 80px);
+        max-height: calc(100% - 80px);
+        min-height: 400px;
         overflow: auto;
+        box-shadow: 0px 1px 4px rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
     
         &::after {
             content: ' ';
@@ -12,32 +37,92 @@
             color: red;
         }
     }
-    
-    .page-actions {
-        display: flex;
-        align-items: center;
-        color: #ff6600;
+
+    &.noStoriesAvailable {
+        height: calc(100% - 100px);
+
+        .stories {
+            height: 100%;
+
+            .noStories {
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                color: #fff;
+                background: #333333;
         
-        .fetchMoreBtn {
-            margin: 30px 15px 30px 0;
-            color: #ff6600;
-            background: transparent;
-            font-size: 16px;
-            font-weight: 500;
-            border: none;
-            outline: none;
-    
-            &:hover {
-                cursor: pointer;
-            }
-    
-            &:focus {
-                outline: none;
-            }
-    
-            &.disabled {
-                color: #333333;
-                pointer-events: none;
+                .notFound {
+                    font-size: 260px;
+                    color: #fff;
+                    font-family: 'Fira Mono', monospace;
+                    letter-spacing: -7px;
+                }
+        
+                .title {
+                    font-size: 18px;
+                    font-weight: 300;
+                }
+
+                .notFound{
+                    animation: glitch 1s linear infinite;
+                  }
+                  
+                  @keyframes glitch{
+                    2%,64%{
+                      transform: translate(2px,0) skew(0deg);
+                    }
+                    4%,60%{
+                      transform: translate(-2px,0) skew(0deg);
+                    }
+                    62%{
+                      transform: translate(0,0) skew(5deg); 
+                    }
+                  }
+                  
+                  .notFound:before,
+                  .notFound:after{
+                    content: attr(title);
+                    position: absolute;
+                    left: 0;
+                  }
+                  
+                  .notFound:before{
+                    animation: glitchTop 1s linear infinite;
+                    clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+                    -webkit-clip-path: polygon(0 0, 100% 0, 100% 33%, 0 33%);
+                  }
+                  
+                  @keyframes glitchTop{
+                    2%,64%{
+                      transform: translate(2px,-2px);
+                    }
+                    4%,60%{
+                      transform: translate(-2px,2px);
+                    }
+                    62%{
+                      transform: translate(13px,-1px) skew(-13deg); 
+                    }
+                  }
+                  
+                  .notFound:after{
+                    animation: glitchBotom 1.5s linear infinite;
+                    clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+                    -webkit-clip-path: polygon(0 67%, 100% 67%, 100% 100%, 0 100%);
+                  }
+                  
+                  @keyframes glitchBotom{
+                    2%,64%{
+                      transform: translate(-2px,0);
+                    }
+                    4%,60%{
+                      transform: translate(-2px,0);
+                    }
+                    62%{
+                      transform: translate(-22px,5px) skew(21deg); 
+                    }
+                  }
             }
         }
     }

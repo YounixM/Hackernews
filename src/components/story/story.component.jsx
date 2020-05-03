@@ -20,11 +20,15 @@ export default class Story extends Component {
     return (
         <div className='story'>
             <div className="comments"> <i className="far fa-comment-alt"></i> &nbsp; {story.num_comments} </div>
+            <div className="votes">
+                {story.points}
+            </div>
             <div
                 className={`upvote ${story.upVoted ? "voted" : ""}`}
                 onClick={() => this.props.upVoteStory(story)}> 
-                {story.points} &nbsp; <i className="fas fa-sort-up"></i> 
+                &nbsp; <i className="fas fa-sort-up"></i> 
             </div>
+            
             <div className='title ellipsis'>
                 <a
                     href={story.url}

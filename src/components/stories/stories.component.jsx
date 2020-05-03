@@ -1,9 +1,21 @@
 import React, { Component } from "react";
 import '../../assets/styles/stories.scss';
 
-import { fetchItemFromLocalStorage, updateItemInLocalStorage } from '../../utils/storage.utils';
+import { fetchItemObjFromLocalStorage, updateVotedStoriesInLocalStorage, updateHiddenStoriesInLocalStorage } from '../../utils/storage.utils';
 import Story from "../story/story.component";
-import Spinner from "../base/spinner/spinner.component";
+import Timeline from "../timeline/timeline.component";
+import PageActions from "../page-actions/page-actions.component";
+
+export function StoriesHeader () {
+  return(
+    <div className='storiesHeader'>
+        <div className="comments"> Comments </div>
+        <div className="votes"> Vote Count </div>
+        <div className="upvote"> UpVote </div>
+        <div className="storyDetails"> News Details </div>
+    </div>
+  )
+}
 
 export default class Stories extends Component {
   constructor(props) {
@@ -14,11 +26,12 @@ export default class Stories extends Component {
       pageNo: 0,
       loadingStories: false,
       hiddenStories: [],
-      upVotedStories: [],
+      upVotedStories: []
     };
 
     this.fetchStories = this.fetchStories.bind(this);
-    this.fetchMoreStories = this.fetchMoreStories.bind(this);
+    this.fetchNextStories = this.fetchNextStories.bind(this);
+    this.fetchPrevStories = this.fetchPrevStories.bind(this);
     this.hideStory = this.hideStory.bind(this);
     this.upVoteStory = this.upVoteStory.bind(this);
   }
@@ -32,23 +45,25 @@ export default class Stories extends Component {
   }
 
   processStories (newStories) {
-    let hiddenStories = fetchItemFromLocalStorage("hiddenStories"),
-        upVotedStories = fetchItemFromLocalStorage("upVotedStories"),
-        stories = [...this.state.stories, ...newStories.hits],
+    let hiddenStories = fetchItemObjFromLocalStorage("hiddenStories"),
+        upVotedStories = fetchItemObjFromLocalStorage("upVotedStories"),
+        stories = [...newStories.hits],
         updatedStories = [];
 
     for (let currIndex = 0; currIndex < stories.length; currIndex++) {
-        let story = stories[currIndex];
-        if(hiddenStories.includes(story.objectID)) {
+        let story = stories[currIndex],
+          storyID = story.objectID;
+
+        if(hiddenStories[storyID]) {
             stories.splice(currIndex, 1);
 
             continue;
         }
 
-        if(upVotedStories.includes(story.objectID)) {
+        if(upVotedStories[storyID]) {
           if(!story.upVoted) {
             story.upVoted = true;
-            story.points += 1;
+            story.points += upVotedStories[storyID].count;
           }
         } else {
             story.upVoted = false;
@@ -63,7 +78,20 @@ export default class Stories extends Component {
     });
   }
 
-  fetchMoreStories() {
+  fetchPrevStories() {
+    this.setState(
+      (prevState) => ({
+        pageNo: prevState.pageNo - 1,
+        loadingStories: true,
+      }),
+      () => {
+        this.fetchStories();
+      }
+    );
+  }
+
+
+  fetchNextStories() {
     this.setState(
       (prevState) => ({
         pageNo: prevState.pageNo + 1,
@@ -93,12 +121,7 @@ export default class Stories extends Component {
   }
 
   upVoteStory(story) {
-
-    if(story.upVoted) {
-        return;
-    }
-
-    updateItemInLocalStorage("upVotedStories", story.objectID);
+    updateVotedStoriesInLocalStorage("upVotedStories", story.objectID);
 
     let { stories } = this.state;
 
@@ -116,7 +139,7 @@ export default class Stories extends Component {
   }
 
   hideStory(story) {
-    updateItemInLocalStorage("hiddenStories", story.objectID);
+    updateHiddenStoriesInLocalStorage("hiddenStories", story.objectID);
 
     let { stories } = this.state;
 
@@ -133,8 +156,14 @@ export default class Stories extends Component {
   }
 
   render() {
+    let noStories = !this.state.loadingStories && !this.state.stories.length;
+
     return (
-      <div className="stories-container">
+      <div className={`stories-container ${noStories ? "noStoriesAvailable" : ""}`}>
+        
+        {this.state.stories.length > 0 &&
+          <StoriesHeader />
+        }
         <div
           className={`stories ${this.state.loadingStories ? "loading" : ""}`}
         >
@@ -154,23 +183,25 @@ export default class Stories extends Component {
           })
          }
 
-         {!this.state.loadingStories && !this.state.stories.length > 0 &&
-            <h4> No stories available </h4>
+         {noStories > 0 &&
+            <div className="noStories">
+              <div className='notFound'> 404 </div>
+              <div className="title"> No stories found </div>
+            </div>
          }
         </div>
-        <div className="page-actions">
-          <button
-            type="button"
-            className={`fetchMoreBtn action ${
-              this.state.loadingStories ? "disabled" : ""
-            }`}
-            onClick={this.fetchMoreStories}
-          >
-            More
-          </button>
 
-          {this.state.loadingStories && <Spinner />}
-        </div>
+        <PageActions
+          stories={this.state.stories}
+          pageNo={this.state.pageNo}
+          loadingStories={this.state.loadingStories} 
+          fetchPrevStories={this.fetchPrevStories}
+          fetchNextStories={this.fetchNextStories}
+        />
+
+        {this.state.stories.length > 0 &&
+          <Timeline data={this.state.stories} />
+        }
       </div>
     );
   }

@@ -15,10 +15,16 @@
     .comments,
     .points,
     .posted_at,
+    .votes,
     .upvote,
     .hide {
         flex: 1;
         margin: 0 4px;
+    }
+
+    .votes,
+    .upvote {
+        text-align: center;
     }
 
     .domain,
@@ -37,11 +43,6 @@
 
         &.voted {
             color: lightseagreen;
-            pointer-events: none;
-
-            &:hover {
-                cursor: not-allowed;
-            }
         }
     }
 
