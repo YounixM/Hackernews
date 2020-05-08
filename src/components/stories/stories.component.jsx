@@ -179,7 +179,7 @@ class Stories extends Component {
         >
           {this.state.stories.map((story) => {
             if (story.isHidden) {
-                return;
+                return null;
             }
 
             return (
