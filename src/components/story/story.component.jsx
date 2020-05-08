@@ -26,7 +26,7 @@ export default class Story extends Component {
             <div
                 className={`upvote ${story.upVoted ? "voted" : ""}`}
                 onClick={() => this.props.upVoteStory(story)}> 
-                <i class="fas fa-caret-up"></i>
+                <i className="fas fa-caret-up"></i>
                 <span className='vote-text'> &nbsp; Vote </span>
             </div>
             

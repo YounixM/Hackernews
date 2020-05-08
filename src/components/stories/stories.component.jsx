@@ -1,7 +1,13 @@
 import React, { Component } from "react";
 import '../../assets/styles/stories.scss';
+import queryString from 'query-string';
 
 import { fetchItemObjFromLocalStorage, updateVotedStoriesInLocalStorage, updateHiddenStoriesInLocalStorage } from '../../utils/storage.utils';
+
+import { withRouter } from "react-router-dom";
+
+import { fetchFrontPageStories } from '../../services/hackernews.service';
+
 import Story from "../story/story.component";
 import Timeline from "../timeline/timeline.component";
 import PageActions from "../page-actions/page-actions.component";
@@ -17,7 +23,7 @@ export function StoriesHeader () {
   )
 }
 
-export default class Stories extends Component {
+class Stories extends Component {
   constructor(props) {
     super(props);
 
@@ -37,10 +43,19 @@ export default class Stories extends Component {
   }
 
   componentDidMount() {
+    let values = queryString.parse(this.props.location.search),
+      pageNo = parseInt(values.pageNo);
+
+    if(Number.isNaN(pageNo)) {
+      // If not a valid pageNo, set pageNo to 0;
+      pageNo = 0;
+    }
+    
     this.setState({
+        pageNo: pageNo,
         loadingStories: true
     }, () => {
-        this.fetchStories();
+        this.fetchStories(pageNo);
     });
   }
 
@@ -85,7 +100,8 @@ export default class Stories extends Component {
         loadingStories: true,
       }),
       () => {
-        this.fetchStories();
+        this.props.history.push(`${window.location.pathname}?pageNo=${this.state.pageNo}`);
+        this.fetchStories(this.state.pageNo);
       }
     );
   }
@@ -98,26 +114,20 @@ export default class Stories extends Component {
         loadingStories: true,
       }),
       () => {
-        this.fetchStories();
+        this.props.history.push(`${window.location.pathname}?pageNo=${this.state.pageNo}`);
+        this.fetchStories(this.state.pageNo);
       }
     );
   }
 
-  fetchStories() {
-    let url =
-      "https://hn.algolia.com/api/v1/search?tags=front_page&page=" +
-      this.state.pageNo;
-
-    fetch(url)
-      .then((res) => res.json())
-      .then(
-        (result) => {
-            this.processStories(result);
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+  fetchStories = async (pageNo) => {
+    try {
+      let result = await fetchFrontPageStories(pageNo);
+      console.log(result);
+      this.processStories(result);
+    } catch(error) {
+      console.error(error);
+    }
   }
 
   upVoteStory(story) {
@@ -206,3 +216,5 @@ export default class Stories extends Component {
     );
   }
 }
+
+export default withRouter(Stories);
